@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fox Group — Admin</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --fox-navy:   #24214a;
+      --fox-orange: #eb941f;
+      --fox-green:  #94c21f;
+      --fox-blue:   #00579e;
+      --white:      #ffffff;
+      --gray-50:    #f8f8fb;
+      --gray-100:   #eeeeee;
+      --gray-200:   #e0e0e8;
+      --gray-400:   #9a9aaa;
+      --gray-600:   #5a5a72;
+      --error:      #d94040;
+      --success:    #3a9e5f;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--gray-50);
+      min-height: 100vh;
+      color: var(--fox-navy);
+    }
+
+    nav {
+      background: var(--fox-navy);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .nav-logo-mark {
+      width: 32px;
+      height: 32px;
+      background: var(--fox-orange);
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-logo-mark i { font-size: 17px; color: var(--white); }
+
+    .nav-logo-text { display: flex; flex-direction: column; line-height: 1; }
+    .nav-logo-text .company { font-size: 14px; font-weight: 600; color: var(--white); }
+    .nav-logo-text .product { font-size: 10px; color: var(--fox-orange); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500; }
+
+    .nav-right { display: flex; align-items: center; gap: 0.75rem; }
+
+    .nav-btn {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.7);
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      text-decoration: none;
+    }
+
+    .nav-btn:hover { background: rgba(255,255,255,0.08); color: var(--white); }
+
+    .nav-badge {
+      background: var(--fox-orange);
+      color: var(--white);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 20px;
+      letter-spacing: 0.04em;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    .page-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 2.5rem;
+    }
+
+    .page-header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.25rem;
+    }
+
+    .page-header p {
+      font-size: 0.875rem;
+      color: var(--gray-400);
+    }
+
+    .btn-primary {
+      background: var(--fox-navy);
+      color: var(--white);
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+
+    .btn-primary:hover { background: #1a1836; }
+
+    .btn-secondary {
+      background: none;
+      color: var(--gray-600);
+      border: 1.5px solid var(--gray-200);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+
+    .btn-secondary:hover { border-color: var(--gray-400); color: var(--fox-navy); }
+
+    .btn-danger {
+      background: none;
+      color: var(--error);
+      border: 1.5px solid #ffd0d0;
+      padding: 7px 12px;
+      border-radius: 7px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s;
+    }
+
+    .btn-danger:hover { background: #fff0f0; }
+
+    /* Users table */
+    .card {
+      background: var(--white);
+      border-radius: 14px;
+      border: 1.5px solid var(--gray-100);
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--gray-100);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-header h2 {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .card-header .count {
+      font-size: 0.8rem;
+      color: var(--gray-400);
+      margin-left: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead th {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--gray-400);
+      padding: 0.75rem 1.5rem;
+      text-align: left;
+      background: var(--gray-50);
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--gray-100);
+      transition: background 0.1s;
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--gray-50); }
+
+    tbody td {
+      padding: 1rem 1.5rem;
+      font-size: 0.875rem;
+      vertical-align: middle;
+    }
+
+    .user-cell {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #ededf4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--fox-navy);
+      flex-shrink: 0;
+    }
+
+    .user-name { font-weight: 500; }
+    .user-email { font-size: 0.78rem; color: var(--gray-400); }
+
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .role-badge.admin {
+      background: #fff5e8;
+      color: #b56e10;
+    }
+
+    .role-badge.staff {
+      background: #ededf4;
+      color: var(--fox-navy);
+    }
+
+    .portal-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .portal-tag {
+      background: #e6f0fa;
+      color: #0c4b88;
+      font-size: 0.72rem;
+      padding: 3px 8px;
+      border-radius: 5px;
+      font-weight: 500;
+    }
+
+    .portal-tag.none {
+      background: var(--gray-100);
+      color: var(--gray-400);
+    }
+
+    .row-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(20,18,50,0.55);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal {
+      background: var(--white);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 480px;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: translateY(12px);
+      transition: transform 0.2s;
+    }
+
+    .modal-overlay.open .modal {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      padding: 1.5rem 1.5rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    .modal-header h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--gray-400);
+      cursor: pointer;
+      font-size: 20px;
+      display: flex;
+      padding: 4px;
+      border-radius: 6px;
+      transition: background 0.15s;
+    }
+
+    .modal-close:hover { background: var(--gray-100); color: var(--fox-navy); }
+
+    .modal-body {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .modal-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--gray-100);
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+    }
+
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+
+    .form-group label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--gray-600);
+    }
+
+    .form-group input,
+    .form-group select {
+      padding: 10px 12px;
+      border: 1.5px solid var(--gray-100);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      color: var(--fox-navy);
+      background: var(--gray-50);
+      outline: none;
+      font-family: inherit;
+      transition: border-color 0.15s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: var(--fox-navy);
+      background: var(--white);
+    }
+
+    .portal-checkboxes {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .portal-checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1.5px solid var(--gray-100);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .portal-checkbox-item:hover {
+      border-color: var(--fox-navy);
+      background: var(--gray-50);
+    }
+
+    .portal-checkbox-item input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--fox-navy);
+      flex-shrink: 0;
+      padding: 0;
+      border: none;
+      background: none;
+    }
+
+    .portal-checkbox-item label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--fox-navy);
+      cursor: pointer;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    .hint {
+      font-size: 0.78rem;
+      color: var(--gray-400);
+      margin-top: -0.6rem;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--fox-navy);
+      color: var(--white);
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all 0.25s;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast.success i { color: var(--fox-green); }
+    .toast.error i { color: #ff6b6b; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-logo" href="/hub">
+      <div class="nav-logo-mark"><i class="ti ti-cpu"></i></div>
+      <div class="nav-logo-text">
+        <span class="company">Fox Group</span>
+        <span class="product">AI Hub</span>
+      </div>
+    </a>
+    <div class="nav-right">
+      <span class="nav-badge">Admin</span>
+      <a href="/hub" class="nav-btn"><i class="ti ti-layout-grid"></i> Hub</a>
+      <button class="nav-btn" onclick="logout()"><i class="ti ti-logout"></i> Sign out</button>
+    </div>
+  </nav>
+
+  <main>
+    <div class="page-header">
+      <div>
+        <h1>User management</h1>
+        <p>Add staff, assign portal access and manage accounts.</p>
+      </div>
+      <button class="btn-primary" onclick="openAddModal()">
+        <i class="ti ti-user-plus"></i> Add user
+      </button>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <span style="font-size:1rem;font-weight:600;">Staff accounts</span>
+          <span class="count" id="userCount">Loading...</span>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Role</th>
+            <th>Portal access</th>
+            <th>Joined</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="usersTableBody">
+          <tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--gray-400);">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Add/Edit Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalTitle">Add user</h3>
+        <button class="modal-close" onclick="closeModal()"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editUserId">
+        <div class="form-group">
+          <label>Full name</label>
+          <input type="text" id="fieldName" placeholder="Jane Smith">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="fieldEmail" placeholder="jane@foxgroup.ai">
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="fieldPassword" placeholder="Leave blank to keep existing">
+          <span class="hint" id="passwordHint">Must be at least 8 characters.</span>
+        </div>
+        <div class="form-group">
+          <label>Role</label>
+          <select id="fieldRole">
+            <option value="staff">Staff</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Portal access</label>
+          <div class="portal-checkboxes" id="portalCheckboxes">Loading portals...</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+        <button class="btn-primary" onclick="saveUser()"><i class="ti ti-check"></i> Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <i class="ti ti-check"></i>
+    <span id="toastMsg">Done</span>
+  </div>
+
+  <script>
+    let allPortals = [];
+    let allUsers = [];
+    let editingUserId = null;
+
+    async function init() {
+      const meRes = await fetch('/api/me');
+      if (!meRes.ok) return window.location.href = '/login';
+      const me = await meRes.json();
+      if (me.role !== 'admin') return window.location.href = '/hub';
+
+      await Promise.all([loadPortals(), loadUsers()]);
+    }
+
+    async function loadPortals() {
+      const res = await fetch('/api/admin/portals');
+      allPortals = await res.json();
+    }
+
+    async function loadUsers() {
+      const res = await fetch('/api/admin/users');
+      allUsers = await res.json();
+      renderUsers();
+    }
+
+    function renderUsers() {
+      const tbody = document.getElementById('usersTableBody');
+      document.getElementById('userCount').textContent = `${allUsers.length} account${allUsers.length !== 1 ? 's' : ''}`;
+
+      if (!allUsers.length) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--gray-400);">No users yet.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = allUsers.map(u => {
+        const initials = u.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0,2);
+        const joined = new Date(u.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+        const portalTags = u.permissions.length
+          ? u.permissions.map(p => `<span class="portal-tag">${p.portal_name}</span>`).join('')
+          : `<span class="portal-tag none">No access</span>`;
+
+        return `
+          <tr>
+            <td>
+              <div class="user-cell">
+                <div class="user-avatar">${initials}</div>
+                <div>
+                  <div class="user-name">${u.name}</div>
+                  <div class="user-email">${u.email}</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="role-badge ${u.role}">${u.role}</span></td>
+            <td><div class="portal-tags">${portalTags}</div></td>
+            <td style="color:var(--gray-400);font-size:0.8rem">${joined}</td>
+            <td>
+              <div class="row-actions">
+                <button class="btn-secondary" onclick="openEditModal(${u.id})">
+                  <i class="ti ti-edit"></i> Edit
+                </button>
+                <button class="btn-danger" onclick="deleteUser(${u.id}, '${u.name}')">
+                  <i class="ti ti-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function buildPortalCheckboxes(selectedIds = []) {
+      const container = document.getElementById('portalCheckboxes');
+      container.innerHTML = allPortals.map(p => `
+        <div class="portal-checkbox-item">
+          <input type="checkbox" id="portal_${p.id}" value="${p.id}" ${selectedIds.includes(p.id) ? 'checked' : ''}>
+          <label for="portal_${p.id}">${p.name}</label>
+        </div>
+      `).join('');
+    }
+
+    function openAddModal() {
+      editingUserId = null;
+      document.getElementById('modalTitle').textContent = 'Add user';
+      document.getElementById('editUserId').value = '';
+      document.getElementById('fieldName').value = '';
+      document.getElementById('fieldEmail').value = '';
+      document.getElementById('fieldPassword').value = '';
+      document.getElementById('fieldPassword').placeholder = 'Set a password';
+      document.getElementById('passwordHint').textContent = 'Must be at least 8 characters.';
+      document.getElementById('fieldRole').value = 'staff';
+      buildPortalCheckboxes([]);
+      document.getElementById('modalOverlay').classList.add('open');
+    }
+
+    function openEditModal(userId) {
+      const user = allUsers.find(u => u.id === userId);
+      if (!user) return;
+      editingUserId = userId;
+      document.getElementById('modalTitle').textContent = 'Edit user';
+      document.getElementById('fieldName').value = user.name;
+      document.getElementById('fieldEmail').value = user.email;
+      document.getElementById('fieldPassword').value = '';
+      document.getElementById('fieldPassword').placeholder = 'Leave blank to keep current password';
+      document.getElementById('passwordHint').textContent = 'Only fill this if you want to change the password.';
+      document.getElementById('fieldRole').value = user.role;
+      const selectedIds = user.permissions.map(p => p.portal_id);
+      buildPortalCheckboxes(selectedIds);
+      document.getElementById('modalOverlay').classList.add('open');
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('open');
+    }
+
+    function getSelectedPortalIds() {
+      return Array.from(document.querySelectorAll('#portalCheckboxes input:checked')).map(el => parseInt(el.value));
+    }
+
+    async function saveUser() {
+      const name = document.getElementById('fieldName').value.trim();
+      const email = document.getElementById('fieldEmail').value.trim();
+      const password = document.getElementById('fieldPassword').value;
+      const role = document.getElementById('fieldRole').value;
+      const portal_ids = getSelectedPortalIds();
+
+      if (!name || !email) return showToast('Name and email are required.', 'error');
+      if (!editingUserId && !password) return showToast('Password is required for new users.', 'error');
+      if (password && password.length < 8) return showToast('Password must be at least 8 characters.', 'error');
+
+      const body = { name, email, role, portal_ids };
+      if (password) body.password = password;
+
+      const url = editingUserId ? `/api/admin/users/${editingUserId}` : '/api/admin/users';
+      const method = editingUserId ? 'PUT' : 'POST';
+
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+
+      const data = await res.json();
+      if (!res.ok) return showToast(data.error || 'Something went wrong.', 'error');
+
+      closeModal();
+      showToast(editingUserId ? 'User updated.' : 'User added.', 'success');
+      await loadUsers();
+    }
+
+    async function deleteUser(userId, name) {
+      if (!confirm(`Delete ${name}? This cannot be undone.`)) return;
+      const res = await fetch(`/api/admin/users/${userId}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (!res.ok) return showToast(data.error || 'Could not delete user.', 'error');
+      showToast('User deleted.', 'success');
+      await loadUsers();
+    }
+
+    function showToast(msg, type = 'success') {
+      const toast = document.getElementById('toast');
+      const icon = toast.querySelector('i');
+      document.getElementById('toastMsg').textContent = msg;
+      toast.className = `toast ${type}`;
+      icon.className = type === 'success' ? 'ti ti-check' : 'ti ti-alert-circle';
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    async function logout() {
+      await fetch('/api/logout', { method: 'POST' });
+      window.location.href = '/login';
+    }
+
+    document.getElementById('modalOverlay').addEventListener('click', e => {
+      if (e.target === document.getElementById('modalOverlay')) closeModal();
+    });
+
+    init();
+  </script>
+</body>
+</html>

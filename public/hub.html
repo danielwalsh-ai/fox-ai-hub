@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fox Group — AI Hub</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --fox-navy:   #24214a;
+      --fox-orange: #eb941f;
+      --fox-green:  #94c21f;
+      --fox-blue:   #00579e;
+      --white:      #ffffff;
+      --gray-50:    #f8f8fb;
+      --gray-100:   #eeeeee;
+      --gray-200:   #e0e0e8;
+      --gray-400:   #9a9aaa;
+      --gray-600:   #5a5a72;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--gray-50);
+      min-height: 100vh;
+      color: var(--fox-navy);
+    }
+
+    /* Nav */
+    nav {
+      background: var(--fox-navy);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .nav-logo-mark {
+      width: 32px;
+      height: 32px;
+      background: var(--fox-orange);
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-logo-mark i {
+      font-size: 17px;
+      color: var(--white);
+    }
+
+    .nav-logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+    }
+
+    .nav-logo-text .company {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--white);
+    }
+
+    .nav-logo-text .product {
+      font-size: 10px;
+      color: var(--fox-orange);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 500;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .nav-user {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--white);
+    }
+
+    .nav-username {
+      font-size: 13px;
+      color: rgba(255,255,255,0.75);
+    }
+
+    .nav-btn {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.7);
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      text-decoration: none;
+    }
+
+    .nav-btn:hover {
+      background: rgba(255,255,255,0.08);
+      color: var(--white);
+    }
+
+    .nav-btn.admin {
+      border-color: var(--fox-orange);
+      color: var(--fox-orange);
+    }
+
+    .nav-btn.admin:hover {
+      background: rgba(235,148,31,0.1);
+    }
+
+    /* Main */
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    .page-header {
+      margin-bottom: 2.5rem;
+    }
+
+    .page-header .greeting {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--fox-navy);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.375rem;
+    }
+
+    .page-header .subtitle {
+      font-size: 0.9rem;
+      color: var(--gray-400);
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gray-400);
+      margin-bottom: 1rem;
+    }
+
+    /* Portal grid */
+    .portal-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 3rem;
+    }
+
+    .portal-tile {
+      background: var(--white);
+      border-radius: 14px;
+      border: 1.5px solid var(--gray-100);
+      padding: 1.75rem;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      transition: border-color 0.15s, transform 0.15s;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .portal-tile::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--tile-color, var(--fox-orange));
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    .portal-tile:hover {
+      border-color: var(--gray-200);
+      transform: translateY(-2px);
+    }
+
+    .portal-tile:hover::before {
+      opacity: 1;
+    }
+
+    .tile-icon-wrap {
+      width: 48px;
+      height: 48px;
+      border-radius: 11px;
+      background: var(--tile-bg, #fff5e8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .tile-icon-wrap i {
+      font-size: 22px;
+      color: var(--tile-color, var(--fox-orange));
+    }
+
+    .tile-body {
+      flex: 1;
+    }
+
+    .tile-name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--fox-navy);
+      margin-bottom: 0.375rem;
+    }
+
+    .tile-desc {
+      font-size: 0.83rem;
+      color: var(--gray-400);
+      line-height: 1.5;
+    }
+
+    .tile-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .tile-open {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--tile-color, var(--fox-orange));
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .tile-open i {
+      font-size: 14px;
+    }
+
+    .tile-status {
+      width: 8px;
+      height: 8px;
+      background: var(--fox-green);
+      border-radius: 50%;
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--gray-400);
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      display: block;
+      opacity: 0.4;
+    }
+
+    .empty-state p {
+      font-size: 0.9rem;
+    }
+
+    /* Skeleton */
+    .skeleton {
+      background: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-50) 50%, var(--gray-100) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 8px;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .skeleton-tile {
+      background: var(--white);
+      border-radius: 14px;
+      border: 1.5px solid var(--gray-100);
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    @media (max-width: 600px) {
+      main { padding: 2rem 1rem; }
+      .portal-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-logo" href="/hub">
+      <div class="nav-logo-mark"><i class="ti ti-cpu"></i></div>
+      <div class="nav-logo-text">
+        <span class="company">Fox Group</span>
+        <span class="product">AI Hub</span>
+      </div>
+    </a>
+    <div class="nav-right">
+      <div class="nav-user">
+        <div class="nav-avatar" id="navAvatar">?</div>
+        <span class="nav-username" id="navUsername">Loading...</span>
+      </div>
+      <a href="/admin" class="nav-btn admin" id="adminBtn" style="display:none">
+        <i class="ti ti-settings"></i> Admin
+      </a>
+      <button class="nav-btn" onclick="logout()">
+        <i class="ti ti-logout"></i> Sign out
+      </button>
+    </div>
+  </nav>
+
+  <main>
+    <div class="page-header">
+      <h1 class="greeting" id="greeting">Good morning</h1>
+      <p class="subtitle">Select a portal to get started.</p>
+    </div>
+
+    <div class="section-label">Your portals</div>
+    <div class="portal-grid" id="portalGrid">
+      <!-- Skeleton loaders -->
+      <div class="skeleton-tile">
+        <div class="skeleton" style="width:48px;height:48px;border-radius:11px;"></div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="skeleton" style="height:16px;width:60%;"></div>
+          <div class="skeleton" style="height:12px;width:90%;"></div>
+          <div class="skeleton" style="height:12px;width:75%;"></div>
+        </div>
+      </div>
+      <div class="skeleton-tile">
+        <div class="skeleton" style="width:48px;height:48px;border-radius:11px;"></div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="skeleton" style="height:16px;width:55%;"></div>
+          <div class="skeleton" style="height:12px;width:85%;"></div>
+          <div class="skeleton" style="height:12px;width:70%;"></div>
+        </div>
+      </div>
+      <div class="skeleton-tile">
+        <div class="skeleton" style="width:48px;height:48px;border-radius:11px;"></div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="skeleton" style="height:16px;width:65%;"></div>
+          <div class="skeleton" style="height:12px;width:80%;"></div>
+          <div class="skeleton" style="height:12px;width:60%;"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const tileColors = [
+      { color: '#eb941f', bg: '#fff5e8' },
+      { color: '#00579e', bg: '#e6f0fa' },
+      { color: '#94c21f', bg: '#f2f9e3' },
+      { color: '#24214a', bg: '#ededf4' },
+    ];
+
+    function getGreeting() {
+      const h = new Date().getHours();
+      if (h < 12) return 'Good morning';
+      if (h < 17) return 'Good afternoon';
+      return 'Good evening';
+    }
+
+    async function init() {
+      document.getElementById('greeting').textContent = getGreeting();
+
+      const meRes = await fetch('/api/me');
+      if (!meRes.ok) return window.location.href = '/login';
+      const me = await meRes.json();
+
+      const initials = me.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0,2);
+      document.getElementById('navAvatar').textContent = initials;
+      document.getElementById('navUsername').textContent = me.name;
+      document.getElementById('greeting').textContent = `${getGreeting()}, ${me.name.split(' ')[0]}.`;
+
+      if (me.role === 'admin') {
+        document.getElementById('adminBtn').style.display = 'flex';
+      }
+
+      const portalsRes = await fetch('/api/portals');
+      const portals = await portalsRes.json();
+      renderPortals(portals);
+    }
+
+    function renderPortals(portals) {
+      const grid = document.getElementById('portalGrid');
+      grid.innerHTML = '';
+
+      if (!portals.length) {
+        grid.innerHTML = `
+          <div class="empty-state" style="grid-column:1/-1">
+            <i class="ti ti-layout-grid-remove"></i>
+            <p>You don't have access to any portals yet.<br>Contact an administrator to request access.</p>
+          </div>`;
+        return;
+      }
+
+      portals.forEach((portal, i) => {
+        const { color, bg } = tileColors[i % tileColors.length];
+        const tile = document.createElement('a');
+        tile.href = portal.url;
+        tile.target = '_blank';
+        tile.rel = 'noopener noreferrer';
+        tile.className = 'portal-tile';
+        tile.style.setProperty('--tile-color', color);
+        tile.style.setProperty('--tile-bg', bg);
+        tile.innerHTML = `
+          <div class="tile-icon-wrap">
+            <i class="ti ${portal.icon || 'ti-layout-dashboard'}"></i>
+          </div>
+          <div class="tile-body">
+            <div class="tile-name">${portal.name}</div>
+            <div class="tile-desc">${portal.description || ''}</div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-open">Open portal <i class="ti ti-arrow-right"></i></span>
+            <span class="tile-status" title="Live"></span>
+          </div>
+        `;
+        grid.appendChild(tile);
+      });
+    }
+
+    async function logout() {
+      await fetch('/api/logout', { method: 'POST' });
+      window.location.href = '/login';
+    }
+
+    init();
+  </script>
+</body>
+</html>

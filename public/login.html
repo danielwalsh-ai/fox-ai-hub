@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fox Group — AI Hub</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --fox-navy:   #24214a;
+      --fox-orange: #eb941f;
+      --fox-green:  #94c21f;
+      --fox-blue:   #00579e;
+      --white:      #ffffff;
+      --gray-50:    #f8f8fb;
+      --gray-100:   #efefef;
+      --gray-400:   #9a9aaa;
+      --gray-600:   #5a5a72;
+      --gray-900:   #1a1a2e;
+      --error:      #d94040;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--gray-50);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .page {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+    }
+
+    /* Left panel */
+    .brand-panel {
+      background: var(--fox-navy);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brand-panel::before {
+      content: '';
+      position: absolute;
+      bottom: -80px;
+      right: -80px;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: var(--fox-orange);
+      opacity: 0.08;
+    }
+
+    .brand-panel::after {
+      content: '';
+      position: absolute;
+      top: -60px;
+      left: -60px;
+      width: 240px;
+      height: 240px;
+      border-radius: 50%;
+      background: var(--fox-blue);
+      opacity: 0.1;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .brand-logo-mark {
+      width: 44px;
+      height: 44px;
+      background: var(--fox-orange);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-logo-mark i {
+      font-size: 22px;
+      color: var(--white);
+    }
+
+    .brand-logo-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-logo-text .company {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--white);
+      letter-spacing: -0.01em;
+    }
+
+    .brand-logo-text .product {
+      font-size: 12px;
+      color: var(--fox-orange);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    .brand-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .brand-content h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.2;
+      margin-bottom: 1.25rem;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-content h1 span {
+      color: var(--fox-orange);
+    }
+
+    .brand-content p {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.6;
+      max-width: 340px;
+    }
+
+    .brand-portal-count {
+      display: flex;
+      gap: 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .portal-stat {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .portal-stat .number {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .portal-stat .label {
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .portal-stat-divider {
+      width: 1px;
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* Right panel */
+    .login-panel {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem;
+      background: var(--white);
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 380px;
+    }
+
+    .login-box h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--fox-navy);
+      margin-bottom: 0.375rem;
+      letter-spacing: -0.01em;
+    }
+
+    .login-box .subtitle {
+      font-size: 0.9rem;
+      color: var(--gray-400);
+      margin-bottom: 2.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--fox-navy);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-wrap i {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px;
+      color: var(--gray-400);
+      pointer-events: none;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 11px 12px 11px 38px;
+      border: 1.5px solid var(--gray-100);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      color: var(--fox-navy);
+      background: var(--gray-50);
+      outline: none;
+      transition: border-color 0.15s, background 0.15s;
+      font-family: inherit;
+    }
+
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+      border-color: var(--fox-navy);
+      background: var(--white);
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 13px;
+      background: var(--fox-navy);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: background 0.15s, transform 0.1s;
+      font-family: inherit;
+      letter-spacing: 0.01em;
+    }
+
+    .btn-login:hover { background: #1a1836; }
+    .btn-login:active { transform: scale(0.99); }
+    .btn-login:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .error-msg {
+      background: #fff0f0;
+      border: 1px solid #ffd0d0;
+      color: var(--error);
+      font-size: 0.85rem;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-bottom: 1.25rem;
+      display: none;
+    }
+
+    .error-msg.visible { display: block; }
+
+    .accent-bar {
+      width: 36px;
+      height: 3px;
+      background: var(--fox-orange);
+      border-radius: 2px;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .page { grid-template-columns: 1fr; }
+      .brand-panel { display: none; }
+      .login-panel { min-height: 100vh; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="brand-panel">
+      <div class="brand-logo">
+        <div class="brand-logo-mark">
+          <i class="ti ti-cpu"></i>
+        </div>
+        <div class="brand-logo-text">
+          <span class="company">Fox Group</span>
+          <span class="product">AI Hub</span>
+        </div>
+      </div>
+
+      <div class="brand-content">
+        <h1>Your portals,<br>all in <span>one place.</span></h1>
+        <p>A single sign-on for every Fox Group AI tool. Access the systems you need, powered by the data that matters.</p>
+      </div>
+
+      <div class="brand-portal-count">
+        <div class="portal-stat">
+          <span class="number">4</span>
+          <span class="label">Live portals</span>
+        </div>
+        <div class="portal-stat-divider"></div>
+        <div class="portal-stat">
+          <span class="number">AI</span>
+          <span class="label">Powered</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="login-panel">
+      <div class="login-box">
+        <div class="accent-bar"></div>
+        <h2>Sign in</h2>
+        <p class="subtitle">Use your Fox Group credentials to continue.</p>
+
+        <div class="error-msg" id="errorMsg">
+          <i class="ti ti-alert-circle"></i> <span id="errorText">Invalid email or password.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <div class="input-wrap">
+            <i class="ti ti-mail"></i>
+            <input type="email" id="email" placeholder="you@foxgroup.ai" autocomplete="email" autofocus>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-wrap">
+            <i class="ti ti-lock"></i>
+            <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+          </div>
+        </div>
+
+        <button class="btn-login" id="loginBtn" onclick="login()">Sign in</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('password').addEventListener('keydown', e => {
+      if (e.key === 'Enter') login();
+    });
+
+    async function login() {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const btn = document.getElementById('loginBtn');
+      const errorMsg = document.getElementById('errorMsg');
+      const errorText = document.getElementById('errorText');
+
+      errorMsg.classList.remove('visible');
+
+      if (!email || !password) {
+        errorText.textContent = 'Please enter your email and password.';
+        errorMsg.classList.add('visible');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Signing in...';
+
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          window.location.href = '/hub';
+        } else {
+          errorText.textContent = data.error || 'Invalid email or password.';
+          errorMsg.classList.add('visible');
+          btn.disabled = false;
+          btn.textContent = 'Sign in';
+        }
+      } catch {
+        errorText.textContent = 'Connection error. Please try again.';
+        errorMsg.classList.add('visible');
+        btn.disabled = false;
+        btn.textContent = 'Sign in';
+      }
+    }
+  </script>
+</body>
+</html>
