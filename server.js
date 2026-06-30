@@ -6,9 +6,12 @@ const bcrypt = require('bcrypt');
 const { Pool } = require('pg');
 const path = require('path');
 const { requireAuth, requireAdmin } = require('./middleware/auth');
+const { answerQuestion } = require('./connectors/agent');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+app.set('trust proxy', 1);
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -26,6 +29,7 @@ app.use(session({
   cookie: {
     secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
+    sameSite: 'lax',
     maxAge: 8 * 60 * 60 * 1000 // 8 hours
   }
 }));
@@ -54,6 +58,10 @@ app.get('/admin', requireAdmin, (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
 
+app.get('/ai', requireAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'ai.html'));
+});
+
 // ─── Auth API ─────────────────────────────────────────────
 
 app.post('/api/login', async (req, res) => {
@@ -73,7 +81,13 @@ app.post('/api/login', async (req, res) => {
     req.session.name = user.name;
     req.session.role = user.role;
 
-    res.json({ success: true, role: user.role });
+    req.session.save((err) => {
+      if (err) {
+        console.error('Session save error:', err);
+        return res.status(500).json({ error: 'Session error' });
+      }
+      res.json({ success: true, role: user.role });
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Server error' });
@@ -113,6 +127,37 @@ app.get('/api/portals', requireAuth, async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Server error' });
+  }
+});
+
+
+// ─── AI Agent ─────────────────────────────────────────────
+
+app.post('/api/ai/ask', requireAuth, async (req, res) => {
+  const { question } = req.body;
+  if (!question || !question.trim()) {
+    return res.status(400).json({ error: 'Question is required' });
+  }
+
+  try {
+    let accessiblePortalNames;
+    if (req.session.role === 'admin') {
+      const result = await pool.query('SELECT name FROM portals WHERE active = true');
+      accessiblePortalNames = result.rows.map(r => r.name);
+    } else {
+      const result = await pool.query(`
+        SELECT p.name FROM portals p
+        INNER JOIN user_permissions up ON up.portal_id = p.id
+        WHERE up.user_id = $1 AND p.active = true
+      `, [req.session.userId]);
+      accessiblePortalNames = result.rows.map(r => r.name);
+    }
+
+    const { report, sources } = await answerQuestion(question, accessiblePortalNames);
+    res.json({ report, sources });
+  } catch (err) {
+    console.error('AI agent error:', err);
+    res.status(500).json({ error: 'Something went wrong generating the report. Try again.' });
   }
 });
 

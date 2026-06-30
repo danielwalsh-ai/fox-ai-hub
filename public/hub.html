@@ -426,12 +426,34 @@
       const grid = document.getElementById('portalGrid');
       grid.innerHTML = '';
 
+      const aiTile = document.createElement('a');
+      aiTile.href = '/ai';
+      aiTile.className = 'portal-tile';
+      aiTile.style.setProperty('--tile-color', '#eb941f');
+      aiTile.style.setProperty('--tile-bg', '#fff5e8');
+      aiTile.innerHTML = `
+        <div class="tile-icon-wrap">
+          <i class="ti ti-cpu"></i>
+        </div>
+        <div class="tile-body">
+          <div class="tile-name">AI Reports</div>
+          <div class="tile-desc">Ask questions and generate reports across your data.</div>
+        </div>
+        <div class="tile-footer">
+          <span class="tile-open">Open <i class="ti ti-arrow-right"></i></span>
+          <span class="tile-status" title="Live"></span>
+        </div>
+      `;
+      grid.appendChild(aiTile);
+
       if (!portals.length) {
-        grid.innerHTML = `
-          <div class="empty-state" style="grid-column:1/-1">
-            <i class="ti ti-layout-grid-remove"></i>
-            <p>You don't have access to any portals yet.<br>Contact an administrator to request access.</p>
-          </div>`;
+        const empty = document.createElement('div');
+        empty.className = 'empty-state';
+        empty.style.gridColumn = '1/-1';
+        empty.innerHTML = `
+          <i class="ti ti-layout-grid-remove"></i>
+          <p>You don't have access to any portals yet.<br>Contact an administrator to request access.</p>`;
+        grid.appendChild(empty);
         return;
       }
 
