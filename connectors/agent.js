@@ -33,7 +33,8 @@ async function callClaude(messages, system) {
 // given the user's question and that portal's schema.
 async function generateSQL(question, portalName, schema) {
   const system = `You write read-only PostgreSQL SELECT queries.
-You are given a database schema for "${portalName}" and a user's question.
+You are given a database schema for "${portalName}" with notes on what each table actually contains and when to use it.
+Read the table descriptions carefully before choosing which table(s) to query - the most obviously-named table is not always the right one.
 Respond with ONLY the SQL query, nothing else, no markdown formatting, no explanation.
 If the question is clearly unrelated to this schema's data, respond with exactly: SKIP
 Never write INSERT, UPDATE, DELETE, DROP, or any modifying statement - SELECT only.
